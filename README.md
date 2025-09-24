@@ -12,7 +12,7 @@ Uma aplicação web para coletar feedback em tempo real durante lives, com cálc
 
 ## 🛠️ Tecnologias
 
-### Frontend
+### Frontend (`/frontend`)
 - React 18
 - Vite
 - Tailwind CSS
@@ -21,7 +21,7 @@ Uma aplicação web para coletar feedback em tempo real durante lives, com cálc
 - Axios
 - Lucide React (ícones)
 
-### Backend
+### Backend (`/backend`)
 - Node.js
 - Express
 - SQLite3
@@ -34,139 +34,117 @@ O CSAT é calculado como a porcentagem de feedbacks satisfatórios (avaliações
 
 **Fórmula**: `CSAT = (Feedbacks 4-5 estrelas / Total de feedbacks) × 100`
 
-## 🏃‍♂️ Como Executar
+## 🏃‍♂️ Como Executar Localmente
 
-### Desenvolvimento
-
-1. **Instalar dependências**:
+### Backend
 ```bash
-npm run install:all
-```
-
-2. **Executar em modo desenvolvimento**:
-```bash
+cd backend
+npm install
 npm run dev
 ```
+Servidor: http://localhost:3001
 
-Isso iniciará:
-- Frontend: http://localhost:5173
-- Backend: http://localhost:3001
-
-### Produção
-
-1. **Build da aplicação**:
+### Frontend
 ```bash
-npm run build
+cd frontend
+npm install
+npm run dev
+```
+Interface: http://localhost:5173
+
+## 🚀 Deploy no Railway (Dois Serviços)
+
+Esta aplicação deve ser deployada como **dois serviços separados** no Railway:
+
+### � Serviço 1: Backend API
+
+**Configurações no Railway:**
+- **Root Directory**: `/backend`
+- **Build Command**: `npm install`  
+- **Start Command**: `npm start`
+
+**Variáveis de Ambiente Obrigatórias:**
+```env
+NODE_ENV=production
+PORT=3001
+FRONTEND_URL=https://SEU-FRONTEND.railway.app
 ```
 
-2. **Executar em produção**:
-```bash
-npm start
+**Volume Necessário:**
+- **Mount Path**: `/data`
+- **Size**: 1GB (para SQLite)
+
+### 🎨 Serviço 2: Frontend
+
+**Configurações no Railway:**
+- **Root Directory**: `/frontend`
+- **Build Command**: `npm run build`
+- **Start Command**: `npm run preview`
+
+**Variáveis de Ambiente Obrigatórias:**
+```env
+VITE_API_URL=https://SEU-BACKEND.railway.app/api
+VITE_SOCKET_URL=https://SEU-BACKEND.railway.app
 ```
-
-## 🚀 Deploy no Railway
-
-### Configuração para Deploy
-
-1. **Variáveis de Ambiente**:
-   - `NODE_ENV=production`
-   - `PORT` (configurado automaticamente pelo Railway)
-   - `FRONTEND_URL` (URL do seu domínio no Railway)
-
-2. **Volume Persistente**:
-   - **IMPORTANTE**: Configure um volume no Railway montado em `/data`
-   - O banco SQLite será armazenado em `/data/database.sqlite`
-   - Sem o volume, os dados serão perdidos a cada deploy
-
-3. **Estrutura para Deploy**:
-   - O backend serve os arquivos estáticos do frontend em produção
-   - SQLite será criado automaticamente no volume `/data`
-   - Socket.IO configurado para funcionar com Railway
-
-### Deploy Automático
-
-1. Conecte seu repositório ao Railway
-2. Railway detectará automaticamente o `package.json` principal
-3. Configure as variáveis de ambiente necessárias
-4. Deploy será feito automaticamente
 
 ## 📁 Estrutura do Projeto
 
 ```
 live-copilot/
-├── backend/
+├── backend/              # Serviço 1 - API
 │   ├── src/
 │   │   ├── database/
-│   │   │   └── db.js
 │   │   ├── routes/
-│   │   │   └── feedback.js
 │   │   └── server.js
-│   ├── package.json
-│   └── .env
-├── frontend/
+│   ├── data/            # Volume SQLite
+│   └── package.json
+├── frontend/            # Serviço 2 - Interface
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── FeedbackForm.jsx
-│   │   │   ├── FeedbackList.jsx
-│   │   │   ├── CSATDisplay.jsx
-│   │   │   └── StarRating.jsx
 │   │   ├── hooks/
-│   │   │   └── useFeedback.js
 │   │   ├── services/
-│   │   │   └── api.js
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── package.json
-│   └── .env
-├── package.json (principal)
+│   │   └── App.jsx
+│   └── package.json
 └── README.md
 ```
 
-## 🔧 Scripts Disponíveis
+## 🚀 Instruções de Deploy Detalhadas
 
-- `npm run dev` - Executa frontend e backend em desenvolvimento
-- `npm run build` - Build de produção
-- `npm run start` - Executa em produção
-- `npm run install:all` - Instala todas as dependências
+### 1️⃣ Deploy do Backend
+1. No Railway, crie um novo projeto
+2. Conecte este repositório GitHub
+3. Configure **Root Directory**: `backend`
+4. Adicione as variáveis de ambiente listadas acima
+5. **IMPORTANTE**: Configure volume em `/data` para persistir SQLite
+6. Deploy automático
 
-## 🌟 Características da Interface
+### 2️⃣ Deploy do Frontend  
+1. Crie um segundo serviço no mesmo projeto Railway
+2. Conecte o mesmo repositório
+3. Configure **Root Directory**: `frontend`
+4. Adicione as variáveis de ambiente (com URL do backend)
+5. Deploy automático
 
-### Formulário de Feedback
-- Campo obrigatório para nome
-- Sistema de avaliação por estrelas interativo
-- Campo opcional para comentários
-- Validação em tempo real
-- Estados de loading durante envio
+### 🔗 Configuração de URLs
+- Backend: `https://backend-xxx.railway.app`
+- Frontend: `https://frontend-yyy.railway.app`
 
-### Dashboard de Feedbacks
-- Lista de feedbacks em tempo real
-- Informações do usuário e timestamp
-- Visualização das avaliações por estrelas
-- CSAT calculado automaticamente
+Substitua as URLs nas variáveis de ambiente após o primeiro deploy.
 
-### Estatísticas CSAT
-- Score visual com cores indicativas
-- Distribuição das avaliações
-- Média geral das avaliações
-- Total de feedbacks recebidos
+## ⚠️ Pontos Importantes
 
-## 📱 Responsividade
+- **Volume no Backend**: Essencial para não perder dados SQLite
+- **CORS**: Backend já configurado para aceitar frontend
+- **Socket.IO**: Configurado para funcionar entre serviços
+- **Build do Frontend**: Gera arquivos estáticos otimizados
 
-A aplicação é totalmente responsiva e funciona perfeitamente em:
-- Desktop
-- Tablets
-- Smartphones
+## 🌟 Funcionalidades
 
-## 🔒 Segurança
-
-- Validação de dados no frontend e backend
-- Sanitização de inputs
-- Headers de segurança configurados
-- CORS configurado adequadamente
-
-## 📞 Suporte
-
-Para dúvidas ou sugestões, abra uma issue no repositório.
+✅ **Formulário de Feedback** com nome, estrelas e comentários  
+✅ **CSAT em Tempo Real** calculado automaticamente  
+✅ **Atualizações Live** via Socket.IO  
+✅ **Interface Responsiva** para todos dispositivos  
+✅ **Persistência de Dados** com SQLite  
 
 ---
 
