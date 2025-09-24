@@ -63,12 +63,11 @@ Esta aplicação deve ser deployada como **dois serviços separados** no Railway
 - **Build Command**: `npm install`  
 - **Start Command**: `npm start`
 
-**Variáveis de Ambiente Obrigatórias:**
+**Variáveis de Ambiente:**
 ```env
-NODE_ENV=production
-PORT=3001
 FRONTEND_URL=https://SEU-FRONTEND.railway.app
 ```
+*Railway define automaticamente: `PORT` (8080) e `NODE_ENV` (production)*
 
 **Volume Necessário:**
 - **Mount Path**: `/data`

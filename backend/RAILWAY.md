@@ -8,11 +8,17 @@
 
 ## 🔐 Variáveis de Ambiente
 
+Configure apenas no painel do Railway:
+
 ```env
-NODE_ENV=production
-PORT=3001
 FRONTEND_URL=https://SEU-FRONTEND.railway.app
 ```
+
+**Automáticas (Railway define sozinho):**
+- `PORT` → 8080 (automático)
+- `NODE_ENV` → production (automático)
+
+**Não precisa de arquivo `.env`** - configure direto no Railway Dashboard.
 
 ## 💾 Volume Obrigatório
 
@@ -27,8 +33,10 @@ Logs esperados após deploy:
 Caminho do banco: /data/database.sqlite
 Conectado ao banco SQLite
 Tabela de feedbacks criada/verificada com sucesso
-Servidor rodando na porta 3001
+Servidor rodando na porta 8080
 ```
+
+**Importante**: Railway usa a porta 8080 automaticamente, não 3001.
 
 ## 🔗 Endpoints Disponíveis
 

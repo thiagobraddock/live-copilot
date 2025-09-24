@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const socketIo = require("socket.io");
-const path = require("path");
 require("dotenv").config();
 
 const feedbackRoutes = require("./routes/feedback");
@@ -27,11 +26,6 @@ app.use(
 );
 app.use(express.json());
 
-// Servir arquivos estáticos do frontend em produção
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-}
-
 // Socket.IO para atualizações em tempo real
 io.on("connection", (socket) => {
   console.log("Cliente conectado:", socket.id);
@@ -47,15 +41,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rotas
+// Rotas da API
 app.use("/api/feedback", feedbackRoutes);
 
-// Rota para servir o frontend em produção
-if (process.env.NODE_ENV === "production") {
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-  });
-}
+// Rota de health check
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", service: "Live Feedback API" });
+});
 
 // Inicializar banco de dados e servidor
 async function startServer() {
