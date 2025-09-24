@@ -48,4 +48,14 @@ pids/
 *.pid
 *.pid.lock
 *.seed
+
+# Banco de dados SQLite
+*.sqlite
+*.db
+backend/data/*.sqlite
+backend/data/*.db
+
+# Manter pasta data mas ignorar conteúdo
+backend/data/*
+!backend/data/.gitkeep
 *.tgz
