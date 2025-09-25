@@ -14,6 +14,9 @@ Configure apenas no painel do Railway:
 FRONTEND_URL=https://SEU-FRONTEND.railway.app
 ```
 
+⚠️ **ATENÇÃO**: URL sem barra final! Exemplo correto:
+`FRONTEND_URL=https://refreshing-unity-production.up.railway.app`
+
 **Automáticas (Railway define sozinho):**
 - `PORT` → 8080 (automático)
 - `NODE_ENV` → production (automático)

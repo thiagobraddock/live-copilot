@@ -25,14 +25,18 @@
 **Solução**:
 1. Configure `FRONTEND_URL` no backend
 2. Configure `VITE_API_URL` no frontend
-3. Exemplo:
+3. ⚠️ **IMPORTANTE**: URLs sem barra final!
+
    ```env
    # Backend
-   FRONTEND_URL=https://frontend-abc.railway.app
+   FRONTEND_URL=https://refreshing-unity-production.up.railway.app
    
    # Frontend  
-   VITE_API_URL=https://backend-xyz.railway.app/api
+   VITE_API_URL=https://live-copilot-production.up.railway.app/api
+   VITE_SOCKET_URL=https://live-copilot-production.up.railway.app
    ```
+
+**Erro comum**: Adicionar `/` no final da URL do frontend causa erro de CORS.
 
 ### ❌ Socket.IO não conecta
 
